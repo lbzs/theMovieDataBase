@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
+
+	let viewModel: TrendingViewModel
+	
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -16,11 +19,12 @@ struct ContentView: View {
             Text("Hello, world!")
         }
         .padding()
-    }
+		.onAppear(perform: viewModel.load)
+	}
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+		ContentView(viewModel: TrendingViewModel(session: URLSession.shared, urlProvider: TrendingURLProvider()))
     }
 }

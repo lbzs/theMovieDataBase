@@ -11,7 +11,7 @@ import SwiftUI
 struct theMovieDataBaseApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+			ContentView(viewModel: TrendingViewModel(session: URLSession.shared, urlProvider: TrendingURLProvider()))
         }
     }
 }

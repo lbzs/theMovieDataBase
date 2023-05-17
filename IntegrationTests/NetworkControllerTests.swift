@@ -32,7 +32,7 @@ final class NetworkControllerTests: XCTestCase {
 
     func testSuccess() async throws {
 
-		URLProtocolStub.setSuccessResponse(forResource: "TrendingSuccess", withExtension: "json")
+		URLProtocolStub.setResponse(statusCode: 200, resource: "TrendingSuccess", extension: "json")
 
 		let elements = try await controller.load()
 
@@ -42,4 +42,17 @@ final class NetworkControllerTests: XCTestCase {
 		XCTAssertEqual(elements.results.count, 1)
     }
 
+	func testInvalidAPIKeyFailure() async throws {
+		let exp = expectation(description: "InvalidAPIKey catched successfully!")
+
+		URLProtocolStub.setResponse(statusCode: 401, resource: "InvalidAPIKey", extension: "json")
+
+		do {
+			let _ = try await controller.load()
+		} catch MDBError.dataTransferFailed(reason: .invalidAPIKey) {
+			exp.fulfill()
+		}
+
+		await fulfillment(of: [exp])
+	}
 }

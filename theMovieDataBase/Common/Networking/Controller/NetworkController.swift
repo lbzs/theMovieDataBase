@@ -12,6 +12,12 @@ class NetworkController<T> where T: Decodable {
 	private let session: URLSession
 	private let urlProvider: URLProvider
 
+	private var decoder: JSONDecoder = {
+		let decoder = JSONDecoder()
+		decoder.keyDecodingStrategy = .convertFromSnakeCase
+		return decoder
+	}()
+
 	init(session: URLSession, urlProvider: URLProvider) {
 		self.session = session
 		self.urlProvider = urlProvider
@@ -32,11 +38,10 @@ class NetworkController<T> where T: Decodable {
 			throw MDBError.dataTransferFailed(reason: .failed)
 		}
 
+		// API error decode
 		if let httpResponse = (response as? HTTPURLResponse),
 		   !httpResponse.isSuccessful() {
 
-			let decoder = JSONDecoder()
-			decoder.keyDecodingStrategy = .convertFromSnakeCase
 			let decoded = try decoder.decode(ErrorResource.self, from: data)
 			let failureReason = MDBError.DataTransferFailureReason.makeFailureReason(fromCode: decoded.statusCode, httpStatus: httpResponse.statusCode)
 			throw MDBError.dataTransferFailed(reason: failureReason)
@@ -44,8 +49,6 @@ class NetworkController<T> where T: Decodable {
 
 		// Decode
 		do {
-			let decoder = JSONDecoder()
-			decoder.keyDecodingStrategy = .convertFromSnakeCase
 			return try decoder.decode(T.self, from: data)
 		} catch let error as DecodingError {
 			throw MDBError.responseSerializationFailed(reason: .decodingFailure(error: error))

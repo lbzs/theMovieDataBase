@@ -26,8 +26,10 @@ struct ContentView: View {
 		List(viewModel.trending, rowContent: {
 			Text($0.title)
 		})
-        .padding()
 		.onAppear(perform: viewModel.load)
+		.refreshable {
+			viewModel.load()
+		}
 	}
 }
 

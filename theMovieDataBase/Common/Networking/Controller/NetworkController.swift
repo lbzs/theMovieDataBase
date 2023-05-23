@@ -28,7 +28,8 @@ class NetworkController<T> where T: Decodable {
 			throw MDBError.invalidURL
 		}
 
-		let urlRequest = URLRequest(url: url)
+		var urlRequest = URLRequest(url: url)
+		urlRequest.allHTTPHeaderFields = ["Authorization": "Bearer \(Constants.APIReadAccessToken)"]
 
 		// Request
 		var (data, response): (Data, URLResponse)

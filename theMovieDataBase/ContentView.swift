@@ -9,15 +9,23 @@ import SwiftUI
 
 struct ContentView: View {
 
-	let viewModel: TrendingViewModel
+	@ObservedObject
+	var viewModel: TrendingViewModel
 	
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-        }
+		switch viewModel.viewState {
+		case .initial:
+			Text("Initial")
+		case .failedToLoad:
+			Text("Failed")
+		case .loaded:
+			Text("Loaded")
+		case .loading:
+			Text("Loading")
+		}
+		List(viewModel.trending, rowContent: {
+			Text($0.title)
+		})
         .padding()
 		.onAppear(perform: viewModel.load)
 	}

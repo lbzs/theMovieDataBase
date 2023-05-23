@@ -7,10 +7,21 @@
 
 import Foundation
 
-final class TrendingViewModel {
+enum ViewState {
+	case initial
+	case loading
+	case loaded
+	case failedToLoad
+}
+
+@MainActor
+final class TrendingViewModel: ObservableObject {
 
 	@Published
 	private(set) var trending: [Trending] = []
+
+	@Published
+	private(set) var viewState: ViewState = .initial
 
 	private let networkController: NetworkController<PagedResource<Trending>>
 
@@ -19,11 +30,17 @@ final class TrendingViewModel {
 	}
 
 	func load() {
+		viewState = .loading
 		Task {
-			if let trending = try? await networkController.load().results { // TODO: error handling
+			do {
+				let trending = try await networkController.load().results
+				viewState = .loaded
 				await MainActor.run {
 					self.trending = trending
 				}
+			} catch {
+				viewState = .failedToLoad
+				print(error)
 			}
 		}
 	}

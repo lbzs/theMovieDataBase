@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct Trending: Decodable, Identifiable {
 
@@ -20,6 +21,8 @@ struct Trending: Decodable, Identifiable {
 	let posterPath: String
 	let voteAverage: Double
 	let mediaType: MediaType
+	let releaseDate: String
+	let image: UIImage
 
 	enum CodingKeys: CodingKey {
 		case id
@@ -28,6 +31,8 @@ struct Trending: Decodable, Identifiable {
 		case posterPath
 		case voteAverage
 		case mediaType
+		case releaseDate // media type `movie` uses `releaseDate` for release date
+		case firstAirDate // media type `tv` uses `firstAirDate` for release date
 	}
 
 	init(from decoder: Decoder) throws {
@@ -43,5 +48,29 @@ struct Trending: Decodable, Identifiable {
 		}
 		posterPath = try container.decode(String.self, forKey: .posterPath)
 		voteAverage = try container.decode(Double.self, forKey: .voteAverage)
+		if let date = try container.decodeIfPresent(String.self, forKey: .releaseDate) {
+			releaseDate = date
+		} else if let date = try container.decodeIfPresent(String.self, forKey: .firstAirDate) {
+			releaseDate = date
+		} else {
+			releaseDate = ""
+		}
+		image = UIImage()
+	}
+
+	init(id: Int,
+		 title: String,
+		 posterPath: String,
+		 voteAverage: Double,
+		 mediaType: MediaType,
+		 releaseDate: String,
+		 image: UIImage) {
+		self.id = id
+		self.title = title
+		self.posterPath = posterPath
+		self.voteAverage = voteAverage
+		self.mediaType = mediaType
+		self.releaseDate = releaseDate
+		self.image = image
 	}
 }

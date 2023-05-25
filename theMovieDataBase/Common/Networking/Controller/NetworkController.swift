@@ -28,6 +28,17 @@ class NetworkController<T> where T: Decodable {
 			throw MDBError.invalidURL
 		}
 
+		let data = try await loadData(from: url)
+
+		// Decode
+		do {
+			return try decoder.decode(T.self, from: data)
+		} catch let error as DecodingError {
+			throw MDBError.responseSerializationFailed(reason: .decodingFailure(error: error))
+		}
+	}
+
+	func loadData(from url: URL) async throws -> Data {
 		var urlRequest = URLRequest(url: url)
 		urlRequest.allHTTPHeaderFields = ["Authorization": "Bearer \(Constants.APIReadAccessToken)"]
 
@@ -48,11 +59,31 @@ class NetworkController<T> where T: Decodable {
 			throw MDBError.dataTransferFailed(reason: failureReason)
 		}
 
-		// Decode
-		do {
-			return try decoder.decode(T.self, from: data)
-		} catch let error as DecodingError {
-			throw MDBError.responseSerializationFailed(reason: .decodingFailure(error: error))
+		return data
+	}
+
+	/// Loads the data of images
+	///
+	/// - Parameter imagePaths: Specifies the path from where the image can be downloaded
+	/// - Returns: A dictionary where the key is the `imagePath` and the key is the data assosiated with it
+	func loadImageData(from imagePaths: [String]) async throws -> [String: Data] {
+
+		try await withThrowingTaskGroup(of: (String, Data).self) { group in
+			for path in imagePaths {
+				guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(path)") else {
+					break
+				}
+				group.addTask {
+					let data = try await self.loadData(from: url)
+					return (path, data)
+				}
+			}
+
+			let result = try await group.reduce(into: [:], { partialResult, nextResult in
+				partialResult[nextResult.0] = nextResult.1
+			})
+
+			return result
 		}
 	}
 }

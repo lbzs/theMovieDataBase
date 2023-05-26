@@ -29,6 +29,13 @@ struct TrendingCell: View {
 	var title: String
 	var date: String
 
+	private var formattedDate: String {
+		guard let date = DateFormatter.NetworkRequestDateFormatter.date(from: date) else {
+			return date
+		}
+		return DateFormatter.UIDateFormatter.string(from: date)
+	}
+
 	var body: some View {
 		VStack {
 			image?
@@ -37,7 +44,7 @@ struct TrendingCell: View {
 				.cornerRadius(10)
 				.frame(width: 150, height: 200)
 			Text(title).frame(width: 100).fixedSize(horizontal: true, vertical: false).lineLimit(nil)
-			Text(date)
+			Text(formattedDate)
 			Spacer()
 		}
 	}

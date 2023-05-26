@@ -14,7 +14,7 @@ struct TrendingListView: View {
 
 	var body: some View {
 		ScrollView(.horizontal, showsIndicators: false) {
-			HStack {
+			HStack(spacing: 0) {
 				ForEach(trending) { trend in
 					TrendingCell(image: Image(uiImage: trend.image), title: trend.title, date: trend.releaseDate)
 				}
@@ -43,8 +43,16 @@ struct TrendingCell: View {
 				.aspectRatio(contentMode: .fit)
 				.cornerRadius(10)
 				.frame(width: 150, height: 200)
-			Text(title).frame(width: 100).fixedSize(horizontal: true, vertical: false).lineLimit(nil)
+			Text(title)
+				.frame(width: 120, alignment: .leading)
+				.fixedSize(horizontal: true, vertical: false)
+				.lineLimit(nil)
+				.fontWeight(.bold)
+				.font(.subheadline)
 			Text(formattedDate)
+				.frame(width: 120, alignment: .leading)
+				.fontWeight(.thin)
+				.font(.subheadline)
 			Spacer()
 		}
 	}

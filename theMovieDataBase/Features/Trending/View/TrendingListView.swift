@@ -62,22 +62,8 @@ struct TrendingCell: View {
 					.aspectRatio(contentMode: .fit)
 					.cornerRadius(10)
 					.frame(width: 150, height: 200)
-				ZStack {
-					Circle()
-					RatingView(percentage: formattedVoteAverage)
-						.foregroundColor(.yellow)
-					HStack(spacing: 0) {
-						Text(String(format: "%1.0f", formattedVoteAverage2))
-							.foregroundColor(.white)
-							.fontWeight(.bold)
-							.font(.subheadline)
-						Text("%")
-							.foregroundColor(.white)
-							.font(.caption2)
-					}
-				}
-				.frame(width: 45, height: 45, alignment: .center)
-				.offset(x: 20, y: 22.5)
+				RatingView(rating: voteAverage)
+					.offset(x: 20, y: 22.5)
 			}
 			Spacer().frame(height: 30)
 			Text(title)
@@ -92,22 +78,6 @@ struct TrendingCell: View {
 				.font(.subheadline)
 			Spacer()
 		}
-	}
-}
-
-struct RatingView: Shape {
-
-	// value between 0 and 100
-	var percentage: Double
-
-	func path(in rect: CGRect) -> Path {
-		var path = Path()
-		path.addArc(center: CGPoint(x: rect.midX, y: rect.midY),
-					radius: rect.width / 2 - 2,
-					startAngle: .degrees(-90),
-					endAngle: .degrees(-90 + percentage * 360),
-					clockwise: false)
-		return path.strokedPath(.init(lineWidth: 3, lineCap: .round))
 	}
 }
 

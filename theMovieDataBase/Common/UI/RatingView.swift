@@ -9,27 +9,17 @@ import SwiftUI
 
 struct RatingView: View {
 
+	@Environment(\.sizeCategory) var sizeCategory
+
+	// valid between 0.0 and 1.0
 	var rating: Double
 
-	private var formattedVoteAverage: Double {
-		var formattedVoteAverage = rating
-		while formattedVoteAverage >= 1.0 {
-			formattedVoteAverage /= 10
-		}
-		return formattedVoteAverage
-	}
-
 	private var formattedVoteAverage2: Double {
-
-		var formattedVoteAverage = rating
-		while formattedVoteAverage <= 10 {
-			formattedVoteAverage *= 10
-		}
-		return formattedVoteAverage
+		return rating * 100
 	}
 
 	private var ratingColor: Color {
-		switch formattedVoteAverage {
+		switch rating {
 		case 0..<0.4:
 			return .red
 		case 0.4..<0.7:
@@ -42,19 +32,21 @@ struct RatingView: View {
 	var body: some View {
 		ZStack {
 			Circle()
-			RatingOverlay(percentage: formattedVoteAverage)
+			RatingOverlay(percentage: rating)
 				.foregroundColor(ratingColor)
 			HStack(spacing: 0) {
 				Text(String(format: "%1.0f", formattedVoteAverage2))
 					.foregroundColor(.white)
 					.fontWeight(.bold)
 					.font(.subheadline)
+					.dynamicTypeSize(.large ... .accessibility2)
 				Text("%")
 					.foregroundColor(.white)
 					.font(.caption2)
+					.dynamicTypeSize(.large ... .accessibility2)
 			}
 		}
-		.frame(width: 45, height: 45, alignment: .center)
+		.frame(width: size, height: size, alignment: .center)
 	}
 }
 
@@ -76,6 +68,34 @@ private struct RatingOverlay: Shape {
 
 struct RatingView_Preview: PreviewProvider {
 	static var previews: some View {
-		RatingView(rating: 79)
+		RatingView(rating: 1)
 	}
+}
+
+extension RatingView {
+
+	// Accessibility compatible sizes
+	private var size: CGFloat {
+		switch sizeCategory {
+		case .extraSmall,
+			 .small,
+			 .medium,
+			 .large:
+			return 50
+		case .extraLarge:
+			return 55
+		case .extraExtraLarge:
+			return 60
+		case .extraExtraExtraLarge:
+			return 65
+		case .accessibilityMedium:
+			return 75
+		case .accessibilityLarge,
+			 .accessibilityExtraLarge,
+			 .accessibilityExtraExtraLarge,
+			 .accessibilityExtraExtraExtraLarge:
+			return 90
+		}
+	}
+
 }

@@ -37,23 +37,6 @@ struct TrendingCell: View {
 		return DateFormatter.UIDateFormatter.string(from: date)
 	}
 
-	private var formattedVoteAverage: Double {
-		var formattedVoteAverage = voteAverage
-		while formattedVoteAverage >= 1.0 {
-			formattedVoteAverage /= 10
-		}
-		return formattedVoteAverage
-	}
-
-	private var formattedVoteAverage2: Double {
-
-		var formattedVoteAverage = voteAverage
-		while formattedVoteAverage <= 10 {
-			formattedVoteAverage *= 10
-		}
-		return formattedVoteAverage
-	}
-
 	var body: some View {
 		VStack {
 			ZStack(alignment: .bottomLeading) {

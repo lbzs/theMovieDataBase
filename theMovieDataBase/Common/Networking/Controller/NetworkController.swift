@@ -70,7 +70,7 @@ class NetworkController<T> where T: Decodable {
 
 		try await withThrowingTaskGroup(of: (String, Data).self) { group in
 			for path in imagePaths {
-				guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(path)") else {
+				guard let url = URL(string: "https://image.tmdb.org/t/p/w300\(path)") else {
 					break
 				}
 				group.addTask {

@@ -72,6 +72,6 @@ struct TrendingListView_Preview: PreviewProvider {
 											 voteAverage: 9.2,
 											 mediaType: .movie,
 											 releaseDate: "2023-11-02",
-											 image: .add)])
+											 image: UIImage(named: "sample")!)])
 	}
 }

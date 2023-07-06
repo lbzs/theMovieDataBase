@@ -47,7 +47,11 @@ struct Trending: Decodable, Identifiable {
 			title = ""
 		}
 		posterPath = try container.decode(String.self, forKey: .posterPath)
-		voteAverage = try container.decode(Double.self, forKey: .voteAverage)
+		var vote = try container.decode(Double.self, forKey: .voteAverage)
+		while vote > 1.0 {
+			vote /= 10
+		}
+		voteAverage = vote
 		if let date = try container.decodeIfPresent(String.self, forKey: .releaseDate) {
 			releaseDate = date
 		} else if let date = try container.decodeIfPresent(String.self, forKey: .firstAirDate) {

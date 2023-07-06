@@ -32,6 +32,7 @@ struct RatingView: View {
 	var body: some View {
 		ZStack {
 			Circle()
+				.foregroundColor(.black)
 			RatingOverlay(percentage: rating)
 				.foregroundColor(ratingColor)
 			HStack(spacing: 0) {

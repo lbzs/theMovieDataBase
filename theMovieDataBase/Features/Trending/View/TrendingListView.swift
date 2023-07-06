@@ -13,10 +13,15 @@ struct TrendingListView: View {
 	var trending: [Trending]
 
 	var body: some View {
-		ScrollView(.horizontal, showsIndicators: false) {
-			HStack(spacing: 0) {
-				ForEach(trending) { trend in
-					TrendingCell(image: Image(uiImage: trend.image), title: trend.title, date: trend.releaseDate, voteAverage: trend.voteAverage)
+		NavigationView {
+			ScrollView(.horizontal, showsIndicators: false) {
+				HStack(spacing: 0) {
+					ForEach(trending) { trend in
+						NavigationLink(destination: DetailView()) {
+							TrendingCell(image: Image(uiImage: trend.image), title: trend.title, date: trend.releaseDate, voteAverage: trend.voteAverage)
+								.navigationTitle("Trending")
+						}
+					}
 				}
 			}
 		}
@@ -55,10 +60,12 @@ struct TrendingCell: View {
 				.lineLimit(nil)
 				.fontWeight(.bold)
 				.font(.subheadline)
+				.foregroundColor(.primary)
 			Text(formattedDate)
 				.frame(width: 120, alignment: .leading)
 				.fontWeight(.thin)
 				.font(.subheadline)
+				.foregroundColor(.primary)
 			Spacer()
 		}
 	}
@@ -69,7 +76,7 @@ struct TrendingListView_Preview: PreviewProvider {
 		TrendingListView(trending: [Trending(id: 1,
 											 title: "Title",
 											 posterPath: "",
-											 voteAverage: 9.2,
+											 voteAverage: 0.92,
 											 mediaType: .movie,
 											 releaseDate: "2023-11-02",
 											 image: UIImage(named: "sample")!)])

@@ -33,6 +33,8 @@ struct RatingView: View {
 		ZStack {
 			Circle()
 				.foregroundColor(.black)
+			RatingOverlay(percentage: 1)
+				.foregroundColor(ratingColor.opacity(0.4))
 			RatingOverlay(percentage: rating)
 				.foregroundColor(ratingColor)
 			HStack(spacing: 0) {
@@ -69,7 +71,7 @@ private struct RatingOverlay: Shape {
 
 struct RatingView_Preview: PreviewProvider {
 	static var previews: some View {
-		RatingView(rating: 1)
+		RatingView(rating: 0.5)
 	}
 }
 

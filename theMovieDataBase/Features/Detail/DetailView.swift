@@ -9,6 +9,8 @@ import SwiftUI
 
 struct DetailView: View {
 
+	@Environment(\.dismiss) private var dismiss
+
 	var title: String = "Nimona"
 	var releaseYear: String = "2023"
 	var genres: String = "Animation, Science Fiction, Action, Adventure, Fantasy"
@@ -19,7 +21,7 @@ struct DetailView: View {
 
 	var body: some View {
 
-		ZStack {
+		ZStack(alignment: .topLeading) {
 			Image("sample")
 				.resizable()
 				.offset(CGSize(width: 0, height: -200))
@@ -57,11 +59,26 @@ struct DetailView: View {
 					Spacer(minLength: 500)
 				}
 				.padding()
+				.border(.clear)
+				.padding()
 				.background()
 				.cornerRadius(20)
 				.offset(CGSize(width: 0, height: 300))
 			}
+			HStack(alignment: .top) {
+				Button {
+					dismiss()
+				} label: {
+					Image(systemName: "x.circle.fill")
+						.foregroundColor(.white)
+						.imageScale(.large)
+						.frame(width: 50, height: 50)
+						.shadow(radius: 5)
+				}
+
+			}
 		}
+		.navigationBarBackButtonHidden(true)
 	}
 }
 

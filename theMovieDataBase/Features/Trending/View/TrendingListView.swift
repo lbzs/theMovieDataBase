@@ -17,7 +17,7 @@ struct TrendingListView: View {
 			ScrollView(.horizontal, showsIndicators: false) {
 				HStack(spacing: 0) {
 					ForEach(trending) { trend in
-						NavigationLink(destination: DetailView()) {
+						NavigationLink(destination: DetailView(title: trend.title, releaseYear: trend.releaseDate, rating: trend.voteAverage)) {
 							TrendingCell(image: Image(uiImage: trend.image), title: trend.title, date: trend.releaseDate, voteAverage: trend.voteAverage)
 								.navigationTitle("Trending")
 						}

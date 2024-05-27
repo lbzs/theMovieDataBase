@@ -5,6 +5,7 @@
 //  Created by Bálna on 2023. 05. 16..
 //
 
+import Combine
 import UIKit
 import Foundation
 
@@ -17,6 +18,7 @@ enum ViewState {
 
 @MainActor
 final class TrendingViewModel: ObservableObject {
+	var cancellables: [AnyCancellable] = []
 
 	@Published
 	private(set) var trending: [Trending] = []
@@ -65,5 +67,17 @@ final class TrendingViewModel: ObservableObject {
 				print(error)
 			}
 		}
+	}
+}
+
+extension TrendingViewModel: EventListener {
+	struct Events {
+		let viewWillAppear: PassthroughSubject<Void, Never>
+	}
+	func listen(events: Events) {
+		let viewWillAppearSubscriber = events.viewWillAppear.sink { [weak self] _ in
+			self?.load()
+		}
+		cancellables.append(viewWillAppearSubscriber)
 	}
 }

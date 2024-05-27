@@ -24,7 +24,7 @@ struct ContentView: View {
 	var viewModel: TrendingViewModel
 	
     var body: some View {
-		TrendingListView(trending: viewModel.trending)
+        TrendingListView(dataProvider: TrendingListViewDataProvider(trending: viewModel.trending))
 		.onAppear(perform: viewWillAppear.send)
 		.refreshable {
             viewWillAppear.send(())
